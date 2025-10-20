@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barak Meyouhas | Full-Stack Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Professional Tech (Slate Gray, Sky Blue, White) -->
+    <!-- Application Structure Plan: The application is designed as a single-page portfolio with a top navigation bar for quick access to key sections. The structure prioritizes user experience for recruiters by starting with a summary, followed by an interactive skills dashboard allowing filtering, a chronological timeline for experience and education, and sections for projects and personal attributes. This non-linear structure allows users to quickly navigate to the information most relevant to them, rather than scrolling through a static document. -->
+    <!-- Visualization & Content Choices: 
+        - Summary: Static text for a quick overview. Goal: Inform.
+        - Technical Skills: Presented as a filterable grid of cards instead of a static table. Goal: Organize & Compare. Interaction: Users can click category buttons to filter skills, making it easier to assess expertise in specific areas. Method: Vanilla JS and Tailwind CSS.
+        - Experience & Education: Combined into a single vertical timeline. Goal: Show Change/Progression. This format visually represents career growth chronologically. Method: HTML/CSS with Tailwind.
+        - Projects: A clear call-to-action section. Goal: Drive Engagement. Interaction: A prominent link to the GitHub portfolio.
+        - Sports & Hobbies: Reframed as "About Me" to highlight soft skills, now includes an image carousel. Goal: Inform/Relate. Method: Styled text with icons, button-triggered modal with JS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #38bdf8;
+            border: 3px solid #f0f9ff;
+        }
+        .timeline-path {
+            position: absolute;
+            left: -21px;
+            top: 20px;
+            width: 2px;
+            height: calc(100% - 20px);
+            background-color: #e0f2fe;
+        }
+        .timeline-item:last-child .timeline-path {
+            display: none;
+        }
+        .modal-image {
+            max-height: 80vh;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans leading-relaxed">
+
+    <!-- Header & Navigation -->
+    <header id="header" class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200">
+        <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <a href="#hero" class="text-2xl font-bold text-slate-900">Barak Meyouhas</a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#summary" class="text-slate-600 hover:text-sky-500 px-3 py-2 rounded-md text-sm font-medium">Summary</a>
+                        <a href="#skills" class="text-slate-600 hover:text-sky-500 px-3 py-2 rounded-md text-sm font-medium">Skills</a>
+                        <a href="#experience" class="text-slate-600 hover:text-sky-500 px-3 py-2 rounded-md text-sm font-medium">Experience</a>
+                        <a href="#projects" class="text-slate-600 hover:text-sky-500 px-3 py-2 rounded-md text-sm font-medium">Projects</a>
+                        <a href="#about" class="text-slate-600 hover:text-sky-500 px-3 py-2 rounded-md text-sm font-medium">About Me</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <!-- Hero Section -->
+        <section id="hero" class="text-center pt-16 pb-24">
+            <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 mb-4">Full-Stack Developer</h1>
+            <p class="text-lg text-slate-600 max-w-3xl mx-auto">Computer Science student with a passion for building scalable web applications and delivering high-quality software through efficient CI/CD pipelines.</p>
+            <div class="mt-8 flex justify-center gap-4 text-sm">
+                <span>barakm25@gmail.com</span>
+                <span>&bull;</span>
+                <span>Kiryat Ono, Israel</span>
+                 <span>&bull;</span>
+                <span>054-334-2645</span>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section id="summary" class="mb-24 scroll-mt-16">
+            <div class="bg-white p-8 rounded-xl shadow-md border border-slate-200">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Summary</h2>
+                <p class="text-slate-600">
+                    As a Full-Stack Developer and honors Computer Science student (GPA: 95), I bring a strong foundation in software engineering principles combined with hands-on experience in modern development practices. At Mountapps, I contribute to the full software lifecycle, from designing and maintaining CI/CD pipelines with GitHub Actions to developing features across the stack. My expertise includes implementing robust automated testing suites with Playwright and Postman, ensuring the delivery of high-quality, reliable software.
+                </p>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="mb-24 scroll-mt-16">
+            <h2 class="text-3xl font-bold text-slate-900 mb-2 text-center">Technical Skills</h2>
+            <p class="text-center text-slate-600 mb-8">This section provides an overview of my technical capabilities. You can filter by category to explore the tools and technologies I work with.</p>
+            
+            <div id="skills-filter" class="flex flex-wrap justify-center gap-2 mb-8">
+                <button data-filter="all" class="filter-btn active bg-sky-500 text-white px-4 py-2 rounded-full text-sm font-semibold">All</button>
+                <button data-filter="frontend" class="filter-btn bg-white hover:bg-sky-100 text-sky-600 px-4 py-2 rounded-full text-sm font-semibold border border-sky-200">Frontend</button>
+                <button data-filter="backend" class="filter-btn bg-white hover:bg-sky-100 text-sky-600 px-4 py-2 rounded-full text-sm font-semibold border border-sky-200">Backend</button>
+                <button data-filter="database" class="filter-btn bg-white hover:bg-sky-100 text-sky-600 px-4 py-2 rounded-full text-sm font-semibold border border-sky-200">Databases & Integration</button>
+                <button data-filter="cloud" class="filter-btn bg-white hover:bg-sky-100 text-sky-600 px-4 py-2 rounded-full text-sm font-semibold border border-sky-200">Cloud & DevOps</button>
+                <button data-filter="testing" class="filter-btn bg-white hover:bg-sky-100 text-sky-600 px-4 py-2 rounded-full text-sm font-semibold border border-sky-200">Testing & QA</button>
+                <button data-filter="languages" class="filter-btn bg-white hover:bg-sky-100 text-sky-600 px-4 py-2 rounded-full text-sm font-semibold border border-sky-200">Languages</button>
+            </div>
+
+            <div id="skills-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <!-- Frontend -->
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="frontend">React</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="frontend">Angular</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="frontend">Flutter</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="frontend">State Management</div>
+                <!-- Backend -->
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="backend">Node.js</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="backend">Express.js</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="backend">.NET / ASP.NET</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="backend">RESTful APIs</div>
+                <!-- Database -->
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="database">SQL (PostgreSQL, MySQL)</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="database">MongoDB</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="database">ERP Integration</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="database">Prisma ORM</div>
+                <!-- Cloud -->
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="cloud">Azure Platform</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="cloud">App Service</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="cloud">Static Web Apps</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="cloud">Azure Functions</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="cloud">GitHub Actions</div>
+                <!-- Testing -->
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="testing">Playwright</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="testing">Postman (CLI)</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="testing">E2E Testing</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="testing">Integration Testing</div>
+                <!-- Languages -->
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="languages">C#</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="languages">JavaScript</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="languages">TypeScript</div>
+                <div class="skill-card p-4 bg-white rounded-lg shadow-sm border border-slate-200 text-center" data-category="languages">Java</div>
+            </div>
+        </section>
+
+
+        <!-- Experience & Education Timeline -->
+        <section id="experience" class="mb-24 scroll-mt-16">
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Career & Education Timeline</h2>
+            <div class="relative pl-8">
+                <!-- Work Experience -->
+                <div class="timeline-item relative mb-8 pl-8">
+                    <div class="timeline-path"></div>
+                    <h3 class="text-xl font-semibold text-slate-900">Full-Stack & CI/CD Developer</h3>
+                    <p class="text-md font-medium text-sky-600">Mountapps</p>
+                    <p class="text-sm text-slate-500 mb-4">July 2025 - Present</p>
+                    <ul class="list-disc list-inside text-slate-600 space-y-2">
+                        <li>Designed and maintained CI/CD pipelines using GitHub Actions for staging and production environments.</li>
+                        <li>Implemented automated testing suites (Smoke, E2E) with Playwright and integrated Postman CLI tests.</li>
+                        <li>Developed features in React and Angular frontends, and built backend services in .NET and Node.js.</li>
+                        <li>Performed integrations with enterprise ERP systems, extracting and processing business data for new features.</li>
+                        <li>Managed and deployed applications on Azure App Services, Static Web Apps, and Functions.</li>
+                    </ul>
+                </div>
+                <!-- Education -->
+                <div class="timeline-item relative mb-8 pl-8">
+                    <div class="timeline-path"></div>
+                    <h3 class="text-xl font-semibold text-slate-900">B.Sc. in Computer Science</h3>
+                    <p class="text-md font-medium text-sky-600">Ono Academic College</p>
+                    <p class="text-sm text-slate-500 mb-2">Nov 2024 - Present</p>
+                    <p class="text-slate-600">Currently pursuing a degree with honors (GPA: 95).</p>
+                </div>
+                <div class="timeline-item relative mb-8 pl-8">
+                    <h3 class="text-xl font-semibold text-slate-900">Full-Stack Development Program</h3>
+                    <p class="text-md font-medium text-sky-600">John Bryce Academy, Tel Aviv</p>
+                    <p class="text-sm text-slate-500 mb-2">Jan 2023 - Jul 2023</p>
+                    <p class="text-slate-600">Completed an intensive, hands-on training program covering the full web development stack (<a href="https://drive.google.com/file/d/19sCoVKFBZ0gTe-yyQpBsvf2lce7P3XAi/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-sky-500 hover:underline font-medium">view certificate</a>).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="mb-24 scroll-mt-16 text-center">
+             <h2 class="text-3xl font-bold text-slate-900 mb-2">Projects</h2>
+             <p class="text-slate-600 mb-6 max-w-2xl mx-auto">This SPA is an example of my work. For a deeper look into my coding style and other projects, please visit my GitHub portfolio.</p>
+             <a href="https://github.com/BarakMeyouhas" target="_blank" rel="noopener noreferrer" class="inline-block bg-slate-900 text-white font-bold py-3 px-6 rounded-lg hover:bg-slate-700 transition-colors">
+                View GitHub Portfolio
+             </a>
+        </section>
+
+        <!-- About Me Section -->
+        <section id="about" class="mb-24 scroll-mt-16">
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">About Me</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200">
+                    <h3 class="text-xl font-semibold mb-3 text-slate-900">🏅 Brazilian Jiu-Jitsu National Team Member</h3>
+                    <p class="text-slate-600 mb-4">As a member of Israel's national team, competing internationally taught me discipline, perseverance, and how to perform well under pressure. Winning national and European medals required a lot of strategic thinking and consistent hard work—skills I bring with me to solve complex challenges in software development.</p>
+                    <button id="open-gallery-btn" class="text-sky-500 hover:text-sky-600 font-semibold text-sm">View Gallery &rarr;</button>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200">
+                     <h3 class="text-xl font-semibold mb-3 text-slate-900">💪 Fitness Coach</h3>
+                    <p class="text-slate-600">I'm dedicated to fitness and endurance training, which helps me stay focused, resilient, and mentally tough. I'm also a certified fitness instructor from the Wingate Institute (<a href="https://drive.google.com/file/d/1UTA4CZrJOn1XaDz1AstaF3H6-UvxbmnD/view?usp=sharing" id="certificate-link" target="_blank" rel="noopener noreferrer" class="text-sky-500 hover:underline font-medium">view certificate</a>). This commitment to always improving keeps me motivated, especially when I'm solving difficult problems or learning new technologies.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200">
+                    <h3 class="text-xl font-semibold mb-3 text-slate-900">♟️ Strategic Thinking & Chess</h3>
+                    <p class="text-slate-600">I enjoy playing chess, which sharpens my strategic planning and foresight. Thinking several moves ahead to find the best solution is a skill I find very useful when designing software architecture and tackling complex problems.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200">
+                    <h3 class="text-xl font-semibold mb-3 text-slate-900">🧠 NLP Course Graduate</h3>
+                    <p class="text-slate-600">I completed a course in Natural Language Processing (NLP) (<a href="https://drive.google.com/file/d/1jxuGp2KPENuHNCFiswypFTNVxNvNXzcQ/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-sky-500 hover:underline font-medium">view certificate</a>), which gave me a strong foundation in how computers understand human language. This has made me more aware of how I communicate and helps me connect more deeply with people.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Image Gallery Modal -->
+    <div id="gallery-modal" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center p-4 z-50">
+        <div class="relative bg-white p-4 rounded-lg max-w-4xl w-full">
+            <button id="close-gallery-btn" class="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full w-8 h-8 flex items-center justify-center text-2xl font-bold hover:bg-opacity-75">&times;</button>
+            <img id="gallery-image" src="" alt="Jiu-Jitsu Gallery" class="modal-image w-full h-auto object-contain rounded">
+            <button id="prev-gallery-btn" class="absolute left-4 top-1/2 -translate-y-1/2 text-white bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center text-3xl font-bold hover:bg-opacity-75">&lsaquo;</button>
+            <button id="next-gallery-btn" class="absolute right-4 top-1/2 -translate-y-1/2 text-white bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center text-3xl font-bold hover:bg-opacity-75">&rsaquo;</button>
+        </div>
+    </div>
+
+
+    <footer class="bg-slate-900 text-slate-400 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
+            <p>&copy; 2025 Barak Meyouhas. Designed to be an interactive portfolio.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterContainer = document.querySelector('#skills-filter');
+            const skills = document.querySelectorAll('.skill-card');
+            const navLinks = document.querySelectorAll('header a[href^="#"]');
+
+            // Skills filter logic
+            if (filterContainer) {
+                filterContainer.addEventListener('click', (e) => {
+                    if (e.target.tagName === 'BUTTON') {
+                        const filterValue = e.target.getAttribute('data-filter');
+
+                        document.querySelectorAll('.filter-btn').forEach(btn => {
+                            btn.classList.remove('active', 'bg-sky-500', 'text-white');
+                            btn.classList.add('bg-white', 'hover:bg-sky-100', 'text-sky-600');
+                        });
+                        e.target.classList.add('active', 'bg-sky-500', 'text-white');
+                        e.target.classList.remove('bg-white', 'hover:bg-sky-100', 'text-sky-600');
+                        
+                        skills.forEach(skill => {
+                            const category = skill.getAttribute('data-category');
+                            if (filterValue === 'all' || category === filterValue) {
+                                skill.classList.remove('hidden');
+                            } else {
+                                skill.classList.add('hidden');
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Smooth scroll for navigation
+            navLinks.forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Image Gallery Logic
+            const galleryModal = document.getElementById('gallery-modal');
+            const openBtn = document.getElementById('open-gallery-btn');
+            const closeBtn = document.getElementById('close-gallery-btn');
+            const nextBtn = document.getElementById('next-gallery-btn');
+            const prevBtn = document.getElementById('prev-gallery-btn');
+            const galleryImage = document.getElementById('gallery-image');
+
+            const images = [
+                'https://raw.githubusercontent.com/BarakMeyouhas/cv-assets/refs/heads/main/%D7%A6%D7%99%D7%9C%D7%95%D7%9D%20%D7%9E%D7%A1%D7%9A%202025-10-20%20101204.png',
+                'https://raw.githubusercontent.com/BarakMeyouhas/cv-assets/refs/heads/main/%D7%A6%D7%99%D7%9C%D7%95%D7%9D%20%D7%9E%D7%A1%D7%9A%202025-10-20%20101307.png',
+                'https://raw.githubusercontent.com/BarakMeyouhas/cv-assets/refs/heads/main/%D7%A6%D7%99%D7%9C%D7%95%D7%9D%20%D7%9E%D7%A1%D7%9A%202025-10-20%20101509.png',
+                'https://raw.githubusercontent.com/BarakMeyouhas/cv-assets/refs/heads/main/%D7%A6%D7%99%D7%9C%D7%95%D7%9D%20%D7%9E%D7%A1%D7%9A%202025-10-20%20101647.png',
+                'https://raw.githubusercontent.com/BarakMeyouhas/cv-assets/refs/heads/main/%D7%A6%D7%99%D7%9C%D7%95%D7%9D%20%D7%9E%D7%A1%D7%9A%202025-10-20%20101718.png',
+                'https://raw.githubusercontent.com/BarakMeyouhas/cv-assets/refs/heads/main/%D7%A6%D7%99%D7%9C%D7%95%D7%9D%20%D7%9E%D7%A1%D7%9A%202025-10-20%20101749.png',
+                'https://raw.githubusercontent.com/BarakMeyouhas/cv-assets/refs/heads/main/%D7%A6%D7%99%D7%9C%D7%95%D7%9D%20%D7%9E%D7%A1%D7%9A%202025-10-20%20101813.png',
+                'https://raw.githubusercontent.com/BarakMeyouhas/cv-assets/refs/heads/main/%D7%A6%D7%99%D7%9C%D7%95%D7%9D%20%D7%9E%D7%A1%D7%9A%202025-10-20%20101840.png',
+                'https://raw.githubusercontent.com/BarakMeyouhas/cv-assets/refs/heads/main/%D7%A6%D7%99%D7%9C%D7%95%D7%9D%20%D7%9E%D7%A1%D7%9A%202025-10-20%20101938.png'
+            ];
+            let currentImageIndex = 0;
+
+            function showImage(index) {
+                galleryImage.src = images[index];
+            }
+
+            openBtn.addEventListener('click', () => {
+                currentImageIndex = 0;
+                showImage(currentImageIndex);
+                galleryModal.classList.remove('hidden');
+                galleryModal.classList.add('flex');
+            });
+
+            closeBtn.addEventListener('click', () => {
+                galleryModal.classList.add('hidden');
+                galleryModal.classList.remove('flex');
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+                showImage(currentImageIndex);
+            });
+
+            prevBtn.addEventListener('click', () => {
+                currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+                showImage(currentImageIndex);
+            });
+            
+            // Close modal on outside click
+            galleryModal.addEventListener('click', (e) => {
+                if (e.target === galleryModal) {
+                    closeBtn.click();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
+
